@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forge status</title>
+<meta name="description" content="Whether Forge is working right now, and its uptime over the last 90 days.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d1f22'/%3E%3Cpath d='M10 7h13v4h-8.5v4H21v4h-6.5v6H10z' fill='%23f5b301'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f7f7f5; --card: #ffffff; --ink: #1d1f22; --ink-2: #55595f; --ink-3: #8a8f96; --line: #e6e6e2;
+    --up: #2f9e6b; --slow: #e0a100; --down: #d64545; --none: #dcdcd8; --brand: #f5b301;
+    --up-bg: #e8f6ef; --slow-bg: #fdf4dc; --down-bg: #fbe9e9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141517; --card: #1c1e21; --ink: #eceded; --ink-2: #b0b4ba; --ink-3: #7d828a; --line: #2b2e32;
+      --up: #3fb57f; --slow: #e8b120; --down: #e86060; --none: #34373c;
+      --up-bg: #17301f; --slow-bg: #332a10; --down-bg: #3a1a1a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 32px 16px 48px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 18px; }
+  .logo { width: 32px; height: 32px; border-radius: 7px; background: #1d1f22; display: grid; place-items: center; }
+  header a { color: var(--ink-2); text-decoration: none; font-size: 14px; border: 1px solid var(--line); padding: 6px 12px; border-radius: 8px; background: var(--card); }
+  header a:hover { color: var(--ink); }
+  .banner { display: flex; align-items: center; gap: 12px; padding: 18px 20px; border-radius: 12px; font-weight: 600; font-size: 17px; margin-bottom: 28px; }
+  .banner.up { background: var(--up-bg); color: var(--up); }
+  .banner.slow { background: var(--slow-bg); color: var(--slow); }
+  .banner.down { background: var(--down-bg); color: var(--down); }
+  .banner.unknown { background: var(--card); color: var(--ink-2); border: 1px solid var(--line); }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: currentColor; flex: none; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+  .comp { padding: 18px 20px; border-top: 1px solid var(--line); }
+  .comp:first-child { border-top: 0; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .name { font-weight: 600; }
+  .about { color: var(--ink-3); font-size: 13px; }
+  .state { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .state.up { color: var(--up); } .state.slow { color: var(--slow); } .state.down { color: var(--down); }
+  .bars { display: flex; gap: 2px; height: 34px; margin: 12px 0 6px; }
+  .bar { flex: 1; border-radius: 2px; background: var(--none); position: relative; min-width: 0; }
+  .bar.up { background: var(--up); } .bar.slow { background: var(--slow); } .bar.down { background: var(--down); }
+  .bar:hover { opacity: .75; }
+  .legend { display: flex; justify-content: space-between; color: var(--ink-3); font-size: 12px; }
+  h2 { font-size: 16px; margin: 36px 0 12px; }
+  .inc { padding: 14px 20px; border-top: 1px solid var(--line); }
+  .inc:first-child { border-top: 0; }
+  .inc .t { font-weight: 600; }
+  .inc .w { color: var(--ink-3); font-size: 13px; }
+  .inc .open { color: var(--down); font-weight: 600; }
+  .empty { padding: 16px 20px; color: var(--ink-3); }
+  footer { margin-top: 32px; color: var(--ink-3); font-size: 13px; text-align: center; }
+  #tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12px; padding: 6px 9px; border-radius: 6px; display: none; white-space: nowrap; z-index: 5; }
+  @media (max-width: 560px) { .bars { gap: 1px; height: 28px; } .bar.old { display: none; } .legend .long { display: none; } .legend .short { display: inline !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <span class="logo"><svg width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 4h17v5H14v5h9v5h-9v9H8z" fill="#f5b301"/></svg></span>
+      Forge status
+    </div>
+    <a href="https://forge.virtusco.in">Open Forge</a>
+  </header>
+
+  <div id="banner" class="banner unknown"><span class="dot"></span><span>Checking…</span></div>
+
+  <div id="components" class="card"></div>
+
+  <h2>Recent incidents</h2>
+  <div id="incidents" class="card"><div class="empty">Loading…</div></div>
+
+  <footer id="foot">Checked every 5 minutes from outside Forge's server.</footer>
+</div>
+<div id="tip"></div>
+<script>
+const DATA = 'https://raw.githubusercontent.com/austin207/virtusco-status/data/status.json';
+const DAYS = 90;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const fmtDay = (d) => new Date(d + 'T00:00:00Z').toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const fmtTime = (t) => new Date(t).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+const dur = (ms) => { const m = Math.max(5, Math.round(ms / 60000)); return m < 60 ? `${m} min` : m < 1440 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${Math.floor(m / 1440)} d ${Math.floor((m % 1440) / 60)} h`; };
+const STATE = { up: 'Working', slow: 'Slow', down: 'Not working' };
+
+function render(s) {
+  const comps = s.components || [];
+  const stale = Date.now() - new Date(s.updated).getTime() > 30 * 60000;
+  const worst = comps.some((c) => c.status === 'down') ? 'down' : comps.some((c) => c.status === 'slow') ? 'slow' : 'up';
+  const b = $('banner');
+  b.className = 'banner ' + (stale ? 'unknown' : worst);
+  b.lastElementChild.textContent = stale ? 'The checks are behind: the latest result is over 30 minutes old.'
+    : worst === 'up' ? 'Everything is working' : worst === 'slow' ? 'Forge is slower than usual' : 'Part of Forge isn’t working. It’s being fixed.';
+
+  const today = new Date(); today.setUTCHours(0, 0, 0, 0);
+  const days = [];
+  for (let i = DAYS - 1; i >= 0; i--) days.push(new Date(today.getTime() - i * 86400000).toISOString().slice(0, 10));
+
+  $('components').innerHTML = comps.map((c) => {
+    const hist = (s.days || {})[c.id] || {};
+    let checks = 0, down = 0;
+    const bars = days.map((d, i) => {
+      const h = hist[d];
+      if (!h) return `<div class="bar${i < 30 ? ' old' : ''}" data-tip="${esc(fmtDay(d))}: no data"></div>`;
+      checks += h.checks; down += h.down;
+      const up = 100 * (1 - h.down / h.checks);
+      const cls = h.down === 0 ? (h.slow > h.checks / 4 ? 'slow' : 'up') : up >= 99 ? 'slow' : 'down';
+      const what = h.down ? `${up.toFixed(2)}% working · about ${dur(h.down * 5 * 60000)} down` : h.slow ? `100% working · slow ${h.slow}× ` : '100% working';
+      return `<div class="bar ${cls}${i < 30 ? ' old' : ''}" data-tip="${esc(fmtDay(d))}: ${esc(what)}"></div>`;
+    }).join('');
+    const pct = checks ? (100 * (1 - down / checks)).toFixed(2) + '% uptime' : 'No data yet';
+    return `<div class="comp">
+      <div class="row"><div><div class="name">${esc(c.name)}</div><div class="about">${esc(c.about || '')}</div></div>
+      <div class="state ${stale ? '' : c.status}">${stale ? '—' : STATE[c.status] || c.status}${c.ms && !stale ? ` · ${c.ms} ms` : ''}</div></div>
+      <div class="bars">${bars}</div>
+      <div class="legend"><span><span class="long">90 days ago</span><span class="short" style="display:none">60 days ago</span></span><span>${pct}</span><span>Today</span></div>
+    </div>`;
+  }).join('');
+
+  const names = Object.fromEntries(comps.map((c) => [c.id, c.name]));
+  const since = Date.now() - 30 * 86400000;
+  const recent = (s.incidents || []).filter((x) => !x.end || new Date(x.end).getTime() > since);
+  $('incidents').innerHTML = recent.length ? recent.map((x) => {
+    const end = x.end ? new Date(x.end).getTime() : Date.now();
+    return `<div class="inc"><div class="t">${esc(x.title || (names[x.component] + ' wasn’t working'))}</div>
+      <div class="w">${x.end ? `Resolved · ${esc(fmtTime(x.start))} to ${esc(fmtTime(x.end))} · ${dur(end - new Date(x.start).getTime())}`
+        : `<span class="open">Ongoing</span> · since ${esc(fmtTime(x.start))} · ${dur(end - new Date(x.start).getTime())} so far`}</div></div>`;
+  }).join('') : '<div class="empty">No incidents in the last 30 days.</div>';
+
+  $('foot').textContent = `Last checked ${fmtTime(s.updated)}${s.version ? ` · release ${s.version}` : ''} · checked every 5 minutes from outside Forge's server.`;
+}
+
+async function load() {
+  try {
+    const r = await fetch(DATA + '?t=' + Math.floor(Date.now() / 60000), { cache: 'no-store' });
+    if (!r.ok) throw new Error(r.status);
+    render(await r.json());
+  } catch {
+    $('banner').lastElementChild.textContent = 'Couldn’t load the latest checks. Try again in a minute.';
+  }
+}
+load();
+setInterval(load, 60000);
+
+const tip = $('tip');
+document.addEventListener('pointerover', (e) => {
+  const t = e.target.closest && e.target.closest('[data-tip]');
+  if (!t) { tip.style.display = 'none'; return; }
+  tip.textContent = t.dataset.tip; tip.style.display = 'block';
+  const r = t.getBoundingClientRect();
+  const w = tip.offsetWidth;
+  tip.style.left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8) + 'px';
+  tip.style.top = (r.top - 34) + 'px';
+});
+document.addEventListener('scroll', () => (tip.style.display = 'none'), { passive: true });
+</script>
+</body>
+</html>

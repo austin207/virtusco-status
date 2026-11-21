@@ -1,0 +1,38 @@
+# Every 5 minutes, from GitHub (outside Forge's server): check Forge and record the result on the `data` branch,
+# which the status page reads. Kept off `main` so the page itself isn't rebuilt every 5 minutes, and kept to a single
+# commit (replaced each time) so the branch never grows.
+name: Check
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+concurrency: check
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check and record
+        run: |
+          mkdir -p /tmp/run && cd /tmp/run
+          if git -C "$GITHUB_WORKSPACE" fetch -q origin data 2>/dev/null; then git -C "$GITHUB_WORKSPACE" show FETCH_HEAD:status.json > status.json; fi
+          node "$GITHUB_WORKSPACE/scripts/check.mjs"
+          cd "$GITHUB_WORKSPACE"
+          git checkout -q --orphan record
+          git rm -rq --cached .
+          cp /tmp/run/status.json status.json
+          git config user.name "forge-status"
+          git config user.email "forge-status@users.noreply.github.com"
+          git add status.json
+          git commit -qm "check $(date -u +%FT%H:%MZ)"
+          git push -qf origin record:data
