@@ -1,0 +1,156 @@
+{
+ "components": [
+  {
+   "id": "app",
+   "name": "Web app",
+   "about": "Opening Forge in a browser or the apps",
+   "status": "up",
+   "ms": 483
+  },
+  {
+   "id": "api",
+   "name": "Sync and API",
+   "about": "Saving and syncing your work",
+   "status": "up",
+   "ms": 441
+  },
+  {
+   "id": "signin",
+   "name": "Sign-in",
+   "about": "Signing in and client portal access",
+   "status": "up",
+   "ms": 475
+  }
+ ],
+ "days": {
+  "app": {
+   "2026-11-21": {
+    "checks": 2,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-22": {
+    "checks": 4,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-23": {
+    "checks": 2,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-24": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-25": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-26": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-27": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-28": {
+    "checks": 2,
+    "down": 0,
+    "slow": 0
+   }
+  },
+  "api": {
+   "2026-11-21": {
+    "checks": 2,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-22": {
+    "checks": 4,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-23": {
+    "checks": 2,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-24": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-25": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-26": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-27": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-28": {
+    "checks": 2,
+    "down": 0,
+    "slow": 0
+   }
+  },
+  "signin": {
+   "2026-11-21": {
+    "checks": 2,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-22": {
+    "checks": 4,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-23": {
+    "checks": 2,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-24": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-25": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-26": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-27": {
+    "checks": 3,
+    "down": 0,
+    "slow": 0
+   },
+   "2026-11-28": {
+    "checks": 2,
+    "down": 0,
+    "slow": 0
+   }
+  }
+ },
+ "incidents": [],
+ "updated": "2026-11-28T13:57:03.363Z",
+ "version": "v1.114.0"
+}
